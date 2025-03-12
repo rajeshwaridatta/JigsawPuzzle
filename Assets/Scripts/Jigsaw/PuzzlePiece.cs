@@ -13,13 +13,7 @@ public class PuzzlePiece : MonoBehaviour
     private int row, col;
     public int index { get;private set; }
     private Vector2 size;
-
-
-    public PuzzlePiece leftNeighbor;
-    public PuzzlePiece rightNeighbor;
-    public PuzzlePiece topNeighbor;
-    public PuzzlePiece bottomNeighbor;
-
+   
     void Awake()
     {
         image = GetComponent<Image>();
@@ -34,21 +28,19 @@ public class PuzzlePiece : MonoBehaviour
         size = new Vector2(sizeVal.Item2, sizeVal.Item1);
     }
 
-    public void SetImage(Sprite fullImage, Rect pieceRect)
+   public void SetPieceImage( Sprite[] puzzlePiecesSprites, int index)
     {
-        Texture2D texture = fullImage.texture;
-        Sprite pieceSprite = Sprite.Create(texture, pieceRect, new Vector2(0.5f, 0.5f));
-        image.sprite = pieceSprite;
+      image.sprite = puzzlePiecesSprites[index];
     }
 
- 
+
     public bool IsCorrectlyPlaced()
     {
-        bool leftCheck = leftNeighbor == null || Mathf.Abs(transform.localPosition.x - leftNeighbor.transform.localPosition.x) < size.x * 0.2f;
-        bool rightCheck = rightNeighbor == null || Mathf.Abs(transform.localPosition.x - rightNeighbor.transform.localPosition.x) < size.x * 0.2f;
-        bool topCheck = topNeighbor == null || Mathf.Abs(transform.localPosition.y - topNeighbor.transform.localPosition.y) < size.y * 0.2f;
-        bool bottomCheck = bottomNeighbor == null || Mathf.Abs(transform.localPosition.y - bottomNeighbor.transform.localPosition.y) < size.y * 0.2f;
-
-        return leftCheck && rightCheck && topCheck && bottomCheck;
+        return placedCorrectly;
     }
+    public void SetPlacement()
+    {
+        placedCorrectly = true;
+    }
+
 }

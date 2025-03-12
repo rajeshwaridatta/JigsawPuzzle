@@ -1,39 +1,58 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TopImageGrid : MonoBehaviour
 {
-    public int rows = 3; // Number of rows for the grid
-    public int cols = 3; // Number of columns for the grid
-    public RectTransform topImageRectTransform; // The RectTransform of the top image
-    public Vector2 pieceSize; // Size of each puzzle piece (calculated automatically)
-    public Texture2D jigsawTexture;
-    private Vector2 imageSize;
+    [SerializeField] public int rows {  get; private set; }
+    [SerializeField] public int cols { get; private set; }
 
-    private Vector2Int dimensions;
-    private float width;
-    private float height;
-    Vector3[,] worldGridPositions;
-    public GameObject maskHolder;
+    [SerializeField] private RectTransform topImageRectTransform;
+    [SerializeField] private GameObject maskHolder;
+    [SerializeField] private Image maskedImage;
 
-    void Start()
+    private Vector3[,] worldGridPositions;
+   
+    private void OnEnable()
     {
-        worldGridPositions = new Vector3[rows, cols];
-        imageSize = topImageRectTransform.rect.size;
-        pieceSize = new Vector2(imageSize.x / cols, imageSize.y / rows);
-
-       
-        AddSnapPositions();
+        DragHandler.OnPiecePlacedCorrectly += CheckGridState;
+    }
+    private void OnDisable()
+    {
+        DragHandler.OnPiecePlacedCorrectly -= CheckGridState;
 
     }
+
+    private void CheckGridState(PuzzlePiece piece)
+    {
+        maskHolder.transform.GetChild(piece.index).gameObject.SetActive(false);
+        bool gameWin = maskHolder.transform.Cast<Transform>().All(child => !child.gameObject.activeSelf);
+        if (gameWin)
+        {
+            PuzzleEvents.InvokePuzzleCompleted();
+            PuzzleGameManager.Instance.userData.userLevelData.currentLevel = PuzzleGameManager.Instance.currentLevel.levelNumber;
+            
+            if (!PuzzleGameManager.Instance.userData.userLevelData.passedInFirstTry)
+            {
+                PuzzleGameManager.Instance.userData.userLevelData.passedInFirstTry = true;
+                PuzzleGameManager.Instance.userData.totalFirstTryCount++;
+            }
+            DataManager.Instance.UpdateUserData(PuzzleGameManager.Instance.userData.userLevelData, PuzzleGameManager.Instance.userData.totalFirstTryCount);
+        }
+            
+       
+    }
+
     public Vector2 CalculateSnapPositions(int row, int col)
     {
         return (worldGridPositions[row, col]);
     }
     public void AddSnapPositions()
     {
+        worldGridPositions = new Vector3[rows, cols];
         Vector3 imageLocalPos = topImageRectTransform.localPosition;
         Vector3 worldPos = topImageRectTransform.TransformPoint(imageLocalPos);
 
@@ -43,32 +62,31 @@ public class TopImageGrid : MonoBehaviour
         {
             for (int j = 0; j < cols; j++)
             {
-              
-               // Vector3 localGridPosition = topLeft + new Vector3(j * GetPieceSize().Item2, -i * GetPieceSize().Item1, 0);
-               // worldGridPositions[i, j] = topImageRectTransform.TransformPoint(localGridPosition)  ;
-               //// worldGridPositions[i, j] -= topImageRectTransform.parent.position;
-               // Debug.Log($"Grid[{i}, {j}] Local: {localGridPosition}, World: {worldGridPositions[i,j]}");
-
-
-
                 Vector3 localGridPosition1 = new Vector3(j * GetPieceSize().Item2 +330, -i * GetPieceSize().Item1-290, 0);
                 worldGridPositions[i, j] = topLeft + localGridPosition1 + correctionOffset;
-
-                //Debug.Log($"Grid[{row}, {col}] World Position: {worldGridPosition}");
-
             }
         }
-        
     }
     public Tuple<float, float> GetPieceSize()
     {
-        height = 1f / dimensions.y;
-        float aspect = (float)jigsawTexture.width / jigsawTexture.height;
-        width = aspect / dimensions.x;
-
-
-       // return Tuple.Create(height, width);
         return Tuple.Create((float)topImageRectTransform.rect.height/rows, (float)topImageRectTransform.rect.width  / cols) ;
     }
-    
+    public void SetLevelImageAssets(LevelData currentLevel)
+    {
+        Sprite s = currentLevel.completeSprite;
+        topImageRectTransform.GetComponent<Image>().sprite =s ;
+        int i = 0;
+        foreach(Transform child in maskHolder.transform)
+        {
+            child.GetComponent<Image>().sprite = currentLevel.puzzlePiecesSprites[i];
+            i++;
+        }
+        maskedImage.sprite = s;
+        rows = currentLevel.numberOfRows;
+        cols = currentLevel.numberOfCols;
+        AddSnapPositions();
+
+
+    }
+
 }
