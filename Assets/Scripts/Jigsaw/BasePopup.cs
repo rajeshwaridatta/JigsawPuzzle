@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class BasePopup : MonoBehaviour, IPopup
 {
     protected CanvasGroup canvasGroup;
+    public string popUpName;
 
     protected virtual void Awake()
     {
@@ -19,6 +20,10 @@ public abstract class BasePopup : MonoBehaviour, IPopup
     public virtual void Show(object data = null)
     {
         gameObject.SetActive(true);
+        if (canvasGroup != null)
+        {
+            canvasGroup.blocksRaycasts = true;
+        }
         StartCoroutine(FadeIn());
         OnShow(data);
     }
@@ -48,12 +53,20 @@ public abstract class BasePopup : MonoBehaviour, IPopup
             canvasGroup.alpha -= Time.deltaTime * 3;
             yield return null;
         }
-        gameObject.SetActive(false);
+        if (canvasGroup != null)
+        {
+            canvasGroup.blocksRaycasts = false;
+        }
+        //  gameObject.SetActive(false);
     }
 
     protected void HideInstantly()
     {
         canvasGroup.alpha = 0;
-        gameObject.SetActive(false);
+        if (canvasGroup != null)
+        {
+            canvasGroup.blocksRaycasts = false;
+        }
+        // gameObject.SetActive(false);
     }
 }

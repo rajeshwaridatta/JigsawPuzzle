@@ -8,6 +8,7 @@ public class PopupManager : Singleton<PopupManager>
 
     public void OpenPopup(IPopup popup)
     {
+        
         if (popup != null)
         {
             popupStack.Push(popup);

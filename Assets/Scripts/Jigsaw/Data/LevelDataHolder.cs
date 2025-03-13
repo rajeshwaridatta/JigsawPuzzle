@@ -25,19 +25,16 @@ public class LevelData
 [System.Serializable]
 public class UserData
 {
-    public UserLevelData userLevelData;
+    public int currentLevelNum;
     public int totalFirstTryCount;
-    public UserData(UserLevelData _userLevelData, int _totalFirstTryCount)
+    public List<int> LevelTryList;
+    
+    public UserData(int _currentLevelNum, int _totalFirstTryCount)
     {
-        userLevelData = _userLevelData;
+        currentLevelNum = _currentLevelNum;
         totalFirstTryCount = _totalFirstTryCount;
+        LevelTryList = new List<int>();
+       
     }
 
-}
-[System.Serializable]
-public class UserLevelData
-{
-    public int currentLevel;
-    public bool passedInFirstTry;
-   
 }

@@ -19,13 +19,12 @@ public class PuzzleGameManager : MonoBehaviour
     {
         Instance = this;
         userData = DataManager.Instance.userData;
-        LoadLevelData(userData.userLevelData.currentLevel);
+        int levelToPlay = levelDataHolder.levelData.Count > userData.currentLevelNum + 1 ? userData.currentLevelNum + 1 : userData.currentLevelNum;
+        Debug.Log("Level to play "+ levelToPlay);
+        LoadLevelData(levelToPlay);
 
     }
-    private void Start()
-    {
-        
-    }
+
     private void LoadLevelData(int levelIndex)
     {
         if (levelIndex < 0 || levelIndex > levelDataHolder.levelData.Count) return;

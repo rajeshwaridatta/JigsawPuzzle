@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,7 @@ public class TopImageGrid : MonoBehaviour
     [SerializeField] private RectTransform topImageRectTransform;
     [SerializeField] private GameObject maskHolder;
     [SerializeField] private Image maskedImage;
+    private bool levelWin = false;
 
     private Vector3[,] worldGridPositions;
    
@@ -32,20 +34,36 @@ public class TopImageGrid : MonoBehaviour
         bool gameWin = maskHolder.transform.Cast<Transform>().All(child => !child.gameObject.activeSelf);
         if (gameWin)
         {
-            PuzzleEvents.InvokePuzzleCompleted();
-            PuzzleGameManager.Instance.userData.userLevelData.currentLevel = PuzzleGameManager.Instance.currentLevel.levelNumber;
-            
-            if (!PuzzleGameManager.Instance.userData.userLevelData.passedInFirstTry)
-            {
-                PuzzleGameManager.Instance.userData.userLevelData.passedInFirstTry = true;
-                PuzzleGameManager.Instance.userData.totalFirstTryCount++;
-            }
-            DataManager.Instance.UpdateUserData(PuzzleGameManager.Instance.userData.userLevelData, PuzzleGameManager.Instance.userData.totalFirstTryCount);
+            GameWin();
         }
             
        
     }
+    public void GameWin()
+    {
+        levelWin = true;
+        PuzzleGameManager.Instance.userData.currentLevelNum = PuzzleGameManager.Instance.currentLevel.levelNumber;
 
+
+        int index = PuzzleGameManager.Instance.userData.currentLevelNum == 0 ? 0 : PuzzleGameManager.Instance.userData.currentLevelNum - 1;
+
+        if (index > 0 && index < PuzzleGameManager.Instance.userData.LevelTryList.Count)
+        {
+            if (PuzzleGameManager.Instance.userData.LevelTryList[index] >= 1)
+            {
+                PuzzleGameManager.Instance.userData.LevelTryList[index]++;
+            }
+        }
+        else
+        {
+            PuzzleGameManager.Instance.userData.LevelTryList.Add(1);
+            PuzzleGameManager.Instance.userData.totalFirstTryCount++;
+        }
+
+        UserData currentData = PuzzleGameManager.Instance.userData;
+        DataManager.Instance.UpdateUserData(currentData);
+        PuzzleEvents.InvokePuzzleCompleted();
+    }
     public Vector2 CalculateSnapPositions(int row, int col)
     {
         return (worldGridPositions[row, col]);
@@ -87,6 +105,30 @@ public class TopImageGrid : MonoBehaviour
         AddSnapPositions();
 
 
+    }
+    private void OnApplicationQuit()
+    {
+        if(!levelWin)
+        {
+            PuzzleGameManager.Instance.userData.currentLevelNum = PuzzleGameManager.Instance.currentLevel.levelNumber-1;
+        int index = PuzzleGameManager.Instance.userData.currentLevelNum == 0 ? 0 : PuzzleGameManager.Instance.userData.currentLevelNum - 1;
+
+            if (index > 0 && index < PuzzleGameManager.Instance.userData.LevelTryList.Count)
+            {
+                if (PuzzleGameManager.Instance.userData.LevelTryList[index] >= 1)
+                {
+                    PuzzleGameManager.Instance.userData.LevelTryList[index]++;
+                }
+            }
+            else
+            {
+                PuzzleGameManager.Instance.userData.LevelTryList.Add(0); 
+
+            }
+            UserData currentData = PuzzleGameManager.Instance.userData;
+            DataManager.Instance.UpdateUserData(currentData);
+        }
+       
     }
 
 }

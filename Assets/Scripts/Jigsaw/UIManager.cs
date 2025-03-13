@@ -4,42 +4,47 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
 
 
 public class UIManager : Singleton<UIManager>
 {
-    public Button LevelBtn;
-    public LevelPopup levelPopup;
-    public ResultPopup resultPopup;
-    public TMP_Text firstTryText;
-    public TMP_Text LevelNumText;
+    
+   
     private void OnEnable()
     {
         PuzzleEvents.OnPuzzleCompleted += ShowGameOver;
         DataManager.OnUserDataLoaded += UpdateText;
+        SceneController.OnSceneLoaded += UpdateText;
     }
     private void OnDisable()
     {
         PuzzleEvents.OnPuzzleCompleted -= ShowGameOver;
         DataManager.OnUserDataLoaded -= UpdateText;
+        SceneController.OnSceneLoaded += UpdateText;
 
     }
     private void Start()
     {
-       // LevelBtn.onClick.AddListener(()=> PopupManager.Instance.OpenPopup(levelPopup));
        
+        UpdateText("MenuScene");
+
+
     }
     private void ShowGameOver()
     {
-        PopupManager.Instance.OpenPopup(resultPopup);
+        GameObject g = GameObject.FindGameObjectWithTag("resultpopup");
+      
+        PopupManager.Instance.OpenPopup(GameObject.FindGameObjectWithTag("resultpopup").GetComponent<IPopup>());
     }
     public void ShowLevelPopup()
     {
-        PopupManager.Instance.OpenPopup(levelPopup);
+        PopupManager.Instance.OpenPopup(GameObject.FindGameObjectWithTag("levelpopup").GetComponent<IPopup>());
     }
-    private void UpdateText()
+    private void UpdateText(string sceneName)
     {
-        firstTryText.text = DataManager.Instance.userData.totalFirstTryCount.ToString();
-        LevelNumText.text = "Level: " + DataManager.Instance.userData.userLevelData.currentLevel.ToString();
+       
+        
+      
     }
 }

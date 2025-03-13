@@ -8,21 +8,35 @@ public class DataManager : Singleton<DataManager>
     [Header("File storage config")]
     [SerializeField] private string fileName;
     private DataSavingUtil dataSaveHandler;
-    public UserData userData { get; private set; }
-    public static event Action OnUserDataLoaded;
+    [SerializeField] public UserData userData { get; private set; }
+    public static event Action<string> OnUserDataLoaded;
+
+
+    private void OnEnable()
+    {
+        SceneController.OnSceneLoaded += LoadGame;
+       
+
+    }
+    private void OnDisable()
+    {
+        SceneController.OnSceneLoaded -= LoadGame;
+
+    }
     private void Start()
     {
         this.dataSaveHandler = new DataSavingUtil(Application.persistentDataPath, fileName);
        
-        LoadGame();
+        LoadGame("");
     }
-    private void LoadGame()
+    private void LoadGame(string sceneName)
     {
         this.userData = dataSaveHandler.Load();
        
         if (this.userData == null)
             NewGame();
-        OnUserDataLoaded.Invoke();
+        OnUserDataLoaded.Invoke(sceneName);
+        Debug.Log(" Data manager userdata loaded " + this.userData.currentLevelNum + "   " + this.userData.totalFirstTryCount);
     }
     private void SaveGame()
     {
@@ -30,19 +44,18 @@ public class DataManager : Singleton<DataManager>
     }
     private void NewGame()
     {
-        UserLevelData newdata = new UserLevelData();
-        newdata.currentLevel = 1;
-        newdata.passedInFirstTry = false;
-        this.userData = new UserData(newdata, 0);
+        this.userData = new UserData(0, 0);
     }
     private void OnApplicationQuit()
     {
         SaveGame();
     }
-    public void UpdateUserData(UserLevelData levelData, int firstTryCount)
+    public void UpdateUserData(UserData data)
     {
-        this.userData.userLevelData = levelData;
-        this.userData.totalFirstTryCount = firstTryCount;
+        this.userData = data;
+       
         SaveGame();
+        Debug.Log(" Data manager userdata updated " + this.userData.currentLevelNum+ "   " + this.userData.totalFirstTryCount);
+        OnUserDataLoaded.Invoke("sceneName");
     }
 }
