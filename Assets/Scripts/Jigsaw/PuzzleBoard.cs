@@ -13,20 +13,15 @@ public class PuzzleBoard : MonoBehaviour
     public static PuzzleBoard instance;
     [SerializeField] private GameObject puzzlePiecePrefab;
     [SerializeField] private RectTransform bottomPanel;
-    [SerializeField] public TopImageGrid topImageGrid;
+    [SerializeField] private TopImageGrid topImageGrid;
     public PuzzlePiece[,] puzzlePieces;
     private Sprite[] puzzlePiecesSprites;
 
 
-    private void OnEnable()
-    {
-        PuzzleGameManager.OnDataLoaded += CreatePuzzlePieces;
-    }
-    private void OnDisable()
-    {
-        PuzzleGameManager.OnDataLoaded -= CreatePuzzlePieces;
+    private void OnEnable()=> PuzzleGameManager.OnDataLoaded += CreatePuzzlePieces;
+   
+    private void OnDisable()=> PuzzleGameManager.OnDataLoaded -= CreatePuzzlePieces;
 
-    }
     void Start()
     {
         instance = this;
@@ -92,15 +87,5 @@ public class PuzzleBoard : MonoBehaviour
             list[k] = list[n];
             list[n] = value;
         }
-    }
-
-
-
-
-    void SetSnapZone(GameObject piece, Vector2 snapPosition, Vector2 pieceSize)
-    {
-        BoxCollider2D collider = piece.AddComponent<BoxCollider2D>();
-        collider.size = pieceSize;
-        collider.offset = snapPosition - new Vector2(pieceSize.x / 2, pieceSize.y / 2); 
     }
 }

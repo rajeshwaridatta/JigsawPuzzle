@@ -106,6 +106,10 @@ public class TopImageGrid : MonoBehaviour
 
 
     }
+    public RectTransform GetCorrectCorrespondingRect(PuzzlePiece piece)
+    {
+        return maskHolder.transform.GetChild(piece.index).GetComponent<RectTransform>();
+    }
     private void OnApplicationQuit()
     {
         if(!levelWin)

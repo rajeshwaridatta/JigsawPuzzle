@@ -16,24 +16,14 @@ public class MenuScreen : MonoBehaviour
     private StringBuilder sb;
     private void Start()
     {
-       
-        UpdateText("");
+        UpdateText();
         LevelBtn.onClick.AddListener(() => UIManager.Instance. ShowLevelPopup());
     }
-    private void OnEnable()
-    {
-        
-        DataManager.OnUserDataLoaded += UpdateText;
-      
-    }
-    private void OnDisable()
-    {
-       
-        DataManager.OnUserDataLoaded -= UpdateText;
-       
+    private void OnEnable()=> DataManager.OnUserDataLoaded += UpdateText;
 
-    }
-    private void UpdateText(string sceneName)
+    private void OnDisable()=> DataManager.OnUserDataLoaded -= UpdateText;
+    
+    private void UpdateText()
     {
         sb = new StringBuilder(); 
         sb.Clear();

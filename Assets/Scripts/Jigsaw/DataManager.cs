@@ -9,7 +9,7 @@ public class DataManager : Singleton<DataManager>
     [SerializeField] private string fileName;
     private DataSavingUtil dataSaveHandler;
     [SerializeField] public UserData userData { get; private set; }
-    public static event Action<string> OnUserDataLoaded;
+    public static event Action OnUserDataLoaded;
 
 
     private void OnEnable()
@@ -35,8 +35,8 @@ public class DataManager : Singleton<DataManager>
        
         if (this.userData == null)
             NewGame();
-        OnUserDataLoaded.Invoke(sceneName);
-        Debug.Log(" Data manager userdata loaded " + this.userData.currentLevelNum + "   " + this.userData.totalFirstTryCount);
+        OnUserDataLoaded.Invoke();
+      
     }
     private void SaveGame()
     {
@@ -55,7 +55,6 @@ public class DataManager : Singleton<DataManager>
         this.userData = data;
        
         SaveGame();
-        //Debug.Log(" Data manager userdata updated " + this.userData.currentLevelNum+ "   " + this.userData.totalFirstTryCount);
-        OnUserDataLoaded.Invoke("sceneName");
+        OnUserDataLoaded?.Invoke();
     }
 }

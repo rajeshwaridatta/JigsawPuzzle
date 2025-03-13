@@ -9,6 +9,7 @@ public static class Constants
     public const string ResultPopupTagName = "resultpopup";
     public const string LevelPopupTagName = "levelpopup";
     public const string MenuMainPanelTagName = "menuscreen";
+    public const string SceneLoaderTagName = "sceneloader";
 
 
 

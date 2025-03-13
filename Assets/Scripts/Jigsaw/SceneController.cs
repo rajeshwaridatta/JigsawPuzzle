@@ -16,18 +16,16 @@ public class SceneController : Singleton<SceneController>
 
     private void Start()
     {
-        fadeCanvasGroup = GameObject.FindGameObjectWithTag("sceneloader").GetComponent<CanvasGroup>();
+        fadeCanvasGroup = GameObject.FindGameObjectWithTag(Constants.SceneLoaderTagName).GetComponent<CanvasGroup>();
         StartCoroutine(FadeIn()); 
     }
 
     public void LoadNextScene(string sceneName)
     {
-        fadeCanvasGroup = GameObject.FindGameObjectWithTag("sceneloader").GetComponent<CanvasGroup>();
+        fadeCanvasGroup = GameObject.FindGameObjectWithTag(Constants.SceneLoaderTagName).GetComponent<CanvasGroup>();
 
         StartCoroutine(FadeOut(sceneName));
         OnSceneLoaded.Invoke(sceneName);
-
-
     }
 
     private IEnumerator FadeIn()
@@ -51,8 +49,6 @@ public class SceneController : Singleton<SceneController>
             fadeCanvasGroup.alpha = t / fadeDuration;
             yield return null;
         }
-
-        // SceneManager.LoadScene(sceneName);
         LoadScene(sceneName);
     }
     public void LoadScene(string sceneName)
@@ -65,17 +61,17 @@ public class SceneController : Singleton<SceneController>
        
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
-        operation.allowSceneActivation = false; // Wait for completion before switching
+        operation.allowSceneActivation = false; 
 
         while (!operation.isDone)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
           
 
-            if (operation.progress >= 0.9f) // Scene is loaded but not activated
+            if (operation.progress >= 0.9f) 
             {
-                yield return new WaitForSeconds(1f); // Add delay for smooth transition
-                operation.allowSceneActivation = true; // Activate new scene
+                yield return new WaitForSeconds(1f); 
+                operation.allowSceneActivation = true; 
             }
 
             yield return null;

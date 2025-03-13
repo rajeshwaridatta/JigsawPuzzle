@@ -6,13 +6,11 @@ using UnityEngine.UI;
 
 public class PuzzlePiece : MonoBehaviour
 {
-    [SerializeField]
-    public Vector2 correctSnapPosition;//{ get; private set; }
-    private bool placedCorrectly = false;
     private Image image;
     private int row, col;
     public int index { get;private set; }
     private Vector2 size;
+    private RectTransform correctPlace;
    
     void Awake()
     {
@@ -21,7 +19,7 @@ public class PuzzlePiece : MonoBehaviour
 
     public void SetCorrectPosition(Vector2 pos, int _row,int _col,int _index, Tuple<float, float> sizeVal)
     {
-        correctSnapPosition = pos;
+        
         row = _row;
         col = _col;
         index = _index;
@@ -32,15 +30,21 @@ public class PuzzlePiece : MonoBehaviour
     {
       image.sprite = puzzlePiecesSprites[index];
     }
-
-
-    public bool IsCorrectlyPlaced()
+   
+   public bool IsOverlapping()
     {
-        return placedCorrectly;
+        Rect r1= GetWorldRect( PuzzleGameManager.Instance.grid.GetCorrectCorrespondingRect(this));
+        Rect r2 = GetWorldRect(this.GetComponent<RectTransform>());
+        return r1.Overlaps(r2);
     }
-    public void SetPlacement()
+
+    Rect GetWorldRect(RectTransform rectTransform)
     {
-        placedCorrectly = true;
+        Vector3[] corners = new Vector3[4];
+        rectTransform.GetWorldCorners(corners);
+        return new Rect(corners[0].x, corners[0].y,
+                        corners[2].x - corners[0].x,
+                        corners[2].y - corners[0].y);
     }
 
 }

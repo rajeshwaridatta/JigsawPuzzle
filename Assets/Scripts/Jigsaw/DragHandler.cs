@@ -29,7 +29,6 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler,IDragHandler, IEndDr
     }
     public void OnDrag(PointerEventData eventData)
     {
-
         RectTransformUtility.ScreenPointToWorldPointInRectangle(
         this.rectTransform,
         eventData.position,
@@ -45,8 +44,7 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler,IDragHandler, IEndDr
     public void OnEndDrag(PointerEventData eventData)
     {
         Vector2 snapPosition = this.GetComponent<PuzzlePiece>().correctSnapPosition;
-        float dist = Vector2.Distance((Vector2)transform.position, snapPosition);
-        if (Vector2.Distance((Vector2)transform.localPosition, snapPosition) < 150f ) 
+       if(piece.IsOverlapping())
         {
             transform.position = new Vector3(snapPosition.x, snapPosition.y, 0f);
             OnPiecePlacedCorrectly.Invoke(piece);
