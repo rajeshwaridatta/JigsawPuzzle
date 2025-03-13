@@ -35,7 +35,7 @@ public class DataManager : Singleton<DataManager>
        
         if (this.userData == null)
             NewGame();
-        OnUserDataLoaded.Invoke();
+        OnUserDataLoaded?.Invoke();
       
     }
     private void SaveGame()

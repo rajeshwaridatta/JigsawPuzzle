@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class PuzzlePiece : MonoBehaviour
 {
+    [SerializeField]
+    public Vector2 correctSnapPosition;//{ get; private set; }
+   
     private Image image;
     private int row, col;
     public int index { get;private set; }
@@ -30,10 +33,12 @@ public class PuzzlePiece : MonoBehaviour
     {
       image.sprite = puzzlePiecesSprites[index];
     }
+
+
    
    public bool IsOverlapping()
     {
-        Rect r1= GetWorldRect( PuzzleGameManager.Instance.grid.GetCorrectCorrespondingRect(this));
+        Rect r1= GetWorldRect( PuzzleGameManager.Instance.grid.GetCorrectRect(this));
         Rect r2 = GetWorldRect(this.GetComponent<RectTransform>());
         return r1.Overlaps(r2);
     }
