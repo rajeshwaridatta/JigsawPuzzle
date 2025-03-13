@@ -27,7 +27,7 @@ public class MenuScreen : MonoBehaviour
     {
         sb = new StringBuilder(); 
         sb.Clear();
-        sb.Append("FT: ").Append(DataManager.Instance.userData?.totalFirstTryCount);
+        sb.Append(DataManager.Instance.userData?.totalFirstTryCount);
         firstTryText.text = sb.ToString();
         sb.Clear();
         sb.Append("Level: ").Append(DataManager.Instance.userData.currentLevelNum + 1);

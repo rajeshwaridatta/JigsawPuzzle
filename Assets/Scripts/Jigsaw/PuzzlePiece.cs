@@ -14,12 +14,13 @@ public class PuzzlePiece : MonoBehaviour
     private int row, col;
     public int index { get;private set; }
     private Vector2 size;
-    private RectTransform correctPlace;
+    private RectTransform rect;
    
     void Awake()
     {
         image = GetComponent<Image>();
         this.GetComponent<Image>().material = null;
+        rect = GetComponent<RectTransform>();
     }
 
     public void SetCorrectPosition(Vector2 pos, int _row,int _col,int _index, Tuple<float, float> sizeVal)
@@ -38,7 +39,7 @@ public class PuzzlePiece : MonoBehaviour
 
     public void SetVFXMat()
     {
-        this.GetComponent<Image>().material = outlineMat;
+        image.material = outlineMat;
     }
     public void PlayScaleAnim()
     {
@@ -53,7 +54,7 @@ public class PuzzlePiece : MonoBehaviour
    public bool IsOverlapping()
     {
         Rect r1= GetWorldRect( PuzzleGameManager.Instance.grid.GetCorrectRect(this));
-        Rect r2 = GetWorldRect(this.GetComponent<RectTransform>());
+        Rect r2 = GetWorldRect(rect);
         return r1.Overlaps(r2);
     }
 

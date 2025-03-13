@@ -71,7 +71,7 @@ public class PuzzleBoard : MonoBehaviour
                 piece.transform.localPosition = gridPositions[rand];
                 gridPositions.RemoveAt(rand);
                 ShuffleList(gridPositions);
-                piece.GetComponent<PuzzlePiece>().SetCorrectPosition(topImageGrid.CalculateSnapPositions(i,j), i,j, index, topImageGrid.GetPieceSize());
+                piece.SetCorrectPosition(topImageGrid.CalculateSnapPositions(i,j), i,j, index, topImageGrid.GetPieceSize());
                
             }
         }
