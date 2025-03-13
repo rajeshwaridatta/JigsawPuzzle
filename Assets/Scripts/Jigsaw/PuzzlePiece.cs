@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PuzzlePiece : MonoBehaviour
 {
     [SerializeField]
     public Vector2 correctSnapPosition;//{ get; private set; }
-   
+    [SerializeField] private Material outlineMat;
     private Image image;
     private int row, col;
     public int index { get;private set; }
@@ -18,6 +19,7 @@ public class PuzzlePiece : MonoBehaviour
     void Awake()
     {
         image = GetComponent<Image>();
+        this.GetComponent<Image>().material = null;
     }
 
     public void SetCorrectPosition(Vector2 pos, int _row,int _col,int _index, Tuple<float, float> sizeVal)
@@ -34,7 +36,19 @@ public class PuzzlePiece : MonoBehaviour
       image.sprite = puzzlePiecesSprites[index];
     }
 
+    public void SetVFXMat()
+    {
+        this.GetComponent<Image>().material = outlineMat;
+    }
+    public void PlayScaleAnim()
+    {
+        Vector2 originalscale = transform.localScale;
+        Vector2 scaleTo = originalscale * 1.25f;
+        transform.DOScale(scaleTo, 0.05f).SetEase(Ease.InOutSine).OnComplete(() => {
 
+           
+        });
+    }
    
    public bool IsOverlapping()
     {

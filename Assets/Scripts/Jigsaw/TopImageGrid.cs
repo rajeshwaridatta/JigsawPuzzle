@@ -30,14 +30,19 @@ public class TopImageGrid : MonoBehaviour
 
     private void CheckGridState(PuzzlePiece piece)
     {
+
+        StartCoroutine(Check(piece));
+       
+    }
+    private IEnumerator Check(PuzzlePiece piece)
+    {
+        yield return new WaitForSeconds(0.3f);
         maskHolder.transform.GetChild(piece.index).gameObject.SetActive(false);
         bool gameWin = maskHolder.transform.Cast<Transform>().All(child => !child.gameObject.activeSelf);
         if (gameWin)
         {
             GameWin();
         }
-            
-       
     }
     public void GameWin()
     {

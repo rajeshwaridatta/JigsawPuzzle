@@ -25,7 +25,8 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler,IDragHandler, IEndDr
     public void OnBeginDrag(PointerEventData eventData)
     {
         originalPosition = transform.position;
-      
+        piece.SetVFXMat();
+
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -37,6 +38,7 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler,IDragHandler, IEndDr
     );
 
         this.rectTransform.position = worldMousePosition;
+       
 
 
     }
@@ -46,16 +48,22 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler,IDragHandler, IEndDr
         Vector2 snapPosition = this.GetComponent<PuzzlePiece>().correctSnapPosition;
        if(piece.IsOverlapping())
         {
-            transform.position = new Vector3(snapPosition.x, snapPosition.y, 0f);
+            piece.SetVFXMat();
+            piece.PlayScaleAnim();
+            
             OnPiecePlacedCorrectly.Invoke(piece);
-           
-            Destroy(gameObject);
+            StartCoroutine(RemovePiece());
         }
         else
         {
             transform.position = originalPosition; 
-            
+           
         }
+    }
+    private IEnumerator RemovePiece()
+    {
+        yield return new WaitForSeconds(0.75f);
+        Destroy(gameObject);
     }
   
 }
