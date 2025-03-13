@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.Device;
+using System.Text;
 
 public class MenuScreen : MonoBehaviour
 {
@@ -12,8 +13,10 @@ public class MenuScreen : MonoBehaviour
 
     public TMP_Text firstTryText;
     public TMP_Text LevelNumText;
+    private StringBuilder sb;
     private void Start()
     {
+       
         UpdateText("");
         LevelBtn.onClick.AddListener(() => UIManager.Instance. ShowLevelPopup());
     }
@@ -32,9 +35,15 @@ public class MenuScreen : MonoBehaviour
     }
     private void UpdateText(string sceneName)
     {
+        sb = new StringBuilder(); 
+        sb.Clear();
+        sb.Append("FT: ").Append(DataManager.Instance.userData?.totalFirstTryCount);
+        firstTryText.text = sb.ToString();
+        sb.Clear();
+        sb.Append("Level: ").Append(DataManager.Instance.userData.currentLevelNum + 1);
+        LevelNumText.text = sb.ToString();
 
-        firstTryText.text = DataManager.Instance.userData?.totalFirstTryCount.ToString();
-        LevelNumText.text = "Level: " + (DataManager.Instance.userData?.currentLevelNum + 1).ToString();
+       
 
     }
 

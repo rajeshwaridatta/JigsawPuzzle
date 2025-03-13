@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Text;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class LevelPopup : BasePopup
 {
@@ -12,20 +14,21 @@ public class LevelPopup : BasePopup
     protected override void Awake()
     {
         base.Awake();
-        popUpName = "levelpopup";
+        popUpName = Constants.LevelPopupTagName;
         if (closeButton != null)
         {
             closeButton.onClick.AddListener(() => PopupManager.Instance.ClosePopup());
         }
         if (playButton != null)
         {
-            playButton.onClick.AddListener(() => SceneController.Instance.LoadNextScene("GamePlayScene"));
+            playButton.onClick.AddListener(() => SceneController.Instance.LoadNextScene(Constants.GameScene));
         }
         
     }
     protected override void OnShow(object data)
     {
-       
-        LevelNumText.text =  LevelNumText.text = "Level: " + (DataManager.Instance.userData.currentLevelNum +1).ToString();
+        StringBuilder sb = new StringBuilder();
+        sb.Append("Level: ").Append(DataManager.Instance.userData.currentLevelNum + 1);
+        LevelNumText.text = sb.ToString();
     }
 }

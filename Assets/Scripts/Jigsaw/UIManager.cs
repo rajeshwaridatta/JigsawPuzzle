@@ -26,8 +26,8 @@ public class UIManager : Singleton<UIManager>
     }
     private void Start()
     {
-       
-        UpdateText("MenuScene");
+
+        UpdateText(Constants.MainMenuScene);
 
 
     }
