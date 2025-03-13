@@ -41,7 +41,7 @@ public abstract class BasePopup : MonoBehaviour, IPopup
         canvasGroup.alpha = 0;
         while (canvasGroup.alpha < 1)
         {
-            canvasGroup.alpha += Time.deltaTime * 3; // Adjust speed
+            canvasGroup.alpha += Time.deltaTime * 3; 
             yield return null;
         }
     }
@@ -57,7 +57,7 @@ public abstract class BasePopup : MonoBehaviour, IPopup
         {
             canvasGroup.blocksRaycasts = false;
         }
-        //  gameObject.SetActive(false);
+      
     }
 
     protected void HideInstantly()
@@ -67,6 +67,6 @@ public abstract class BasePopup : MonoBehaviour, IPopup
         {
             canvasGroup.blocksRaycasts = false;
         }
-        // gameObject.SetActive(false);
+        
     }
 }

@@ -55,7 +55,7 @@ public class DataManager : Singleton<DataManager>
         this.userData = data;
        
         SaveGame();
-        Debug.Log(" Data manager userdata updated " + this.userData.currentLevelNum+ "   " + this.userData.totalFirstTryCount);
+        //Debug.Log(" Data manager userdata updated " + this.userData.currentLevelNum+ "   " + this.userData.totalFirstTryCount);
         OnUserDataLoaded.Invoke("sceneName");
     }
 }
